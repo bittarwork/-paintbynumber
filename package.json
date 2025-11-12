@@ -1,0 +1,24 @@
+{
+  "name": "paint-by-numbers-generator",
+  "version": "1.0.0",
+  "description": "Paint by numbers generator",
+  "bin": "./src-cli/main.js",
+  "scripts": {
+    "lite": "lite-server --port 10001",
+    "start": "npm run lite",
+    "build": "tsc -p src/tsconfig.json",
+    "watch": "tsc -p src/tsconfig.json --watch"
+  },
+  "author": "drake7707",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "lite-server": "^2.6.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/jquery": "^3.5.29",
+    "@types/materialize-css": "^1.0.13",
+    "@types/minimist": "^1.2.5",
+    "minimist": "^1.2.8"
+  }
+}
