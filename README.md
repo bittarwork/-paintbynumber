@@ -52,24 +52,35 @@ npm run build
 
 ### Web Interface
 
-1. Start the development server:
-```bash
-npm start
-```
+1. **First Time Setup:**
+   ```bash
+   # Install dependencies (if not already done)
+   npm install
+   
+   # Build the TypeScript project
+   npm run build
+   ```
 
-2. Open your browser and navigate to `http://localhost:10001`
+2. **Start the development server:**
+   ```bash
+   npm start
+   ```
 
-3. Upload an image or use one of the example images
+3. **Open your browser:**
+   - Navigate to `http://localhost:10001`
+   - The application will automatically load
 
-4. Adjust settings as needed:
-   - **Number of Colors**: Recommended 8-32 colors
-   - **Cluster Precision**: Lower values = more accurate clustering
-   - **Color Space**: Choose RGB, HSL, or LAB
-   - **Facet Settings**: Control minimum facet size and maximum number of facets
-
-5. Click "Process Image" to generate your paint-by-numbers template
-
-6. Download the result as SVG or PNG
+4. **Use the application:**
+   - Upload an image using the upload button or drag-and-drop
+   - Or try one of the example images (Trivial, Small, Medium)
+   - Adjust settings as needed:
+     - **Number of Colors**: Recommended 8-32 colors
+     - **Cluster Precision**: Lower values = more accurate clustering
+     - **Color Space**: Choose RGB, HSL, or LAB
+     - **Facet Settings**: Control minimum facet size and maximum number of facets
+   - Click "Process Image" (or press Ctrl+P / Cmd+P)
+   - Wait for processing to complete
+   - Download the result as SVG or PNG
 
 ### CLI Tool
 
@@ -92,6 +103,33 @@ node src-cli/main.js -i testinput.png -o output.svg -c src-cli/settings.json
 
 **Settings File:**
 The CLI uses a JSON configuration file. See `src-cli/settings.json` for an example configuration with multiple output profiles.
+
+## Quick Start Guide
+
+### For Web Application:
+
+```bash
+# Step 1: Install dependencies
+npm install
+
+# Step 2: Build the project
+npm run build
+
+# Step 3: Start the server
+npm start
+
+# Step 4: Open browser to http://localhost:10001
+```
+
+### Development Mode (Auto-rebuild):
+
+```bash
+# Terminal 1: Watch for changes and rebuild
+npm run watch
+
+# Terminal 2: Start the server
+npm start
+```
 
 ## Project Structure
 
@@ -166,6 +204,23 @@ npm run watch
 - Canvas API support required
 - Drag and drop API support recommended
 
+## Troubleshooting
+
+### Common Issues
+
+1. **"Cannot find module" errors:**
+   - Run `npm install` to install dependencies
+
+2. **"main.js not found" error:**
+   - Run `npm run build` to compile TypeScript files
+
+3. **Port already in use:**
+   - Change the port in `package.json` scripts or kill the process using port 10001
+
+4. **Build errors:**
+   - Make sure TypeScript is installed: `npm install -g typescript` (optional, should be in devDependencies)
+   - Check that all dependencies are installed: `npm install`
+
 ## License
 
 See LICENSE file for details.
@@ -177,4 +232,3 @@ drake7707
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
