@@ -1,118 +1,180 @@
-# Paint by numbers generator
-Generate paint by number images (vectorized with SVG) from any input image.
+# Paint by Numbers Generator
 
-*** This project was a proof of concept for fun back in the day, it is not being actively maintained but feel free to fork and make your own changes.  ***
+An AI-powered web application and CLI tool that converts images into paint-by-numbers templates. This tool uses advanced image processing algorithms including K-means clustering, facet detection, and border tracing to create printable paint-by-numbers patterns.
 
-## Demo
+## Features
 
-Try it out [here](https://drake7707.github.io/paintbynumbersgenerator/index.html)
+- **Web Interface**: Modern, responsive web application with drag-and-drop support
+- **CLI Tool**: Command-line interface for batch processing
+- **Advanced Image Processing**:
+  - K-means color clustering (RGB, HSL, LAB color spaces)
+  - Automatic facet detection and reduction
+  - Border tracing and segmentation
+  - Smart label placement
+- **Customizable Settings**:
+  - Number of colors (8-32 recommended)
+  - Image resizing options
+  - Facet size and cleanup parameters
+  - Border smoothing
+  - Color restrictions
+- **Export Options**:
+  - SVG output (scalable vector graphics)
+  - PNG export
+  - Color palette download
+  - Multiple output profiles (CLI)
 
-### CLI Version
+## Installation
 
-The CLI version is a self contained node application that does the conversion from arguments, for example:
-```
-paint-by-numbers-generator-win.exe -i input.png -o output.svg
-```
-You can change the settings in settings.json or optionally specify a specific settings.json with the `-c path_to_settings.json` argument.
+### Prerequisites
 
-The settings contain mostly the same settings in the web version:
- - randomSeed: the random seed to choose the initial starting points of the k-means clustering algorithm. This ensures that the same results are generated each time.
- - kMeansNrOfClusters: the number of colors to quantize the image to
- - kMeansMinDeltaDifference: the threshold delta distance of the k-means clustering to reach before stopping. Having a bigger value will speed up the clustering but may yield suboptimal clusters. Default 1
- - kMeansClusteringColorSpace: the color space to apply clustering in
- - kMeansColorRestrictions: Specify which colors should be used. An array of rgb values (as number array) or names of colors (reference to color aliases). If no colors are specified no restrictions are applied. Useful if you only have a few colors of paint on hand.
- - colorAliases: map of key/values where the keys are the color names and the values are the rgb colors (as number array). You can use the color names in the color restrictions above. The names are also mentioned in the output json that tells you how much % of the area is of that specific color.
-       ```
-       "colorAliases": {
-              "A1": [            0,            0,            0        ],
-              "A2": [            255,            0,            0        ],
-              "A3": [            0,            255,            0        ],
-          }
-        ```
- - removeFacetsSmallerThanNrOfPoints: removes any facets that are smaller than the given amount of pixels. Lowering the value will create more detailed results but might be much harder to actually paint due to their size.
- - removeFacetsFromLargeToSmall (true/false): largest to smallest will prevent boundaries from warping the shapes because the smaller facets act as border anchorpoints but can be considerably slower
- - maximumNumberOfFacets: if there are more facets than the given maximum number, keep removing the smallest facets until the limit is reached
- 
- - nrOfTimesToHalveBorderSegments: reducing the amount of points in a border segment (using haar wavelet reduction) will smooth out the quadratic curve more but at a loss of detail. A segment (shared border with a facet) will always retain its start and end point.
- 
- - narrowPixelStripCleanupRuns: narrow pixel cleanup removes strips of single pixel rows, which would make some facets have some borders segments that are way too narrow to be useful. The small facet removal can introduce new narrow pixel strips, so this is repeated in a few iterative runs.
- 
- - resizeImageIfTooLarge (true/false): if true and the input image is larger than the given dimensions then it will be resized to fit but will maintain its ratio.
- - resizeImageWidth: width restriction
- - resizeImageHeight: height restriction
+- Node.js (v14 or higher)
+- npm or yarn
 
-There are also output profiles that you can define to output the result to svg, png, jpg with specific settings, for example:
-```
-  "outputProfiles": [
-        {
-            "name": "full",
-            "svgShowLabels": true,
-            "svgFillFacets": true,
-            "svgShowBorders": true,
-            "svgSizeMultiplier": 3,
-            "svgFontSize": 50,
-            "svgFontColor": "#333",
-            "filetype": "png"
-        },
-        {
-            "name": "bordersLabels",
-            "svgShowLabels": true,
-            "svgFillFacets": false,
-            "svgShowBorders": true,
-            "svgSizeMultiplier": 3,
-            "svgFontSize": 50,
-            "svgFontColor": "#333",
-            "filetype": "svg"
-        },
-        {
-            "name": "jpgtest",
-            "svgShowLabels": false,
-            "svgFillFacets": true,
-            "svgShowBorders": false,
-            "svgSizeMultiplier": 3,
-            "svgFontSize": 50,
-            "svgFontColor": "#333",
-            "filetype": "jpg",
-            "filetypeQuality": 80
-        }
-    ]
-```
-This defines 3 output profiles. The "full" profile shows labels, fills the facets and shows the borders with a 3x size multiplier, font size weight of 50, color of #333 and output to a png image. The bordersLabels profile outputs to a svg file without filling facets and jpgtest outputs to a jpg file with jpg quality setting  of 80.
+### Setup
 
-The CLI version also outputs a json file that gives more information about the palette, which colors are used and in what quantity, e.g.:
-```
-  ...
-  {
-    "areaPercentage": 0.20327615489130435,
-    "color": [ 59, 36, 27 ],
-    "frequency": 119689,
-    "index": 0
-  },
-   ...
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd -paintbynumber
 ```
 
-The CLI version is useful if you want to automate the process into your own scripts.
+2. Install dependencies:
+```bash
+npm install
+```
 
-## Screenshots
+3. Build the project:
+```bash
+npm run build
+```
 
-![Screenshot](https://i.imgur.com/6uHm78x.png])
+## Usage
 
-![Screenshot](https://i.imgur.com/cY9ieAy.png)
+### Web Interface
 
+1. Start the development server:
+```bash
+npm start
+```
 
-## Example output
+2. Open your browser and navigate to `http://localhost:10001`
 
-![ExampleOutput](https://i.imgur.com/2Zuo13d.png)
+3. Upload an image or use one of the example images
 
-![ExampleOutput2](https://i.imgur.com/SxWhOc7.png)
+4. Adjust settings as needed:
+   - **Number of Colors**: Recommended 8-32 colors
+   - **Cluster Precision**: Lower values = more accurate clustering
+   - **Color Space**: Choose RGB, HSL, or LAB
+   - **Facet Settings**: Control minimum facet size and maximum number of facets
 
-## Running locally
+5. Click "Process Image" to generate your paint-by-numbers template
 
-I used VSCode, which has built in typescript support. To debug it uses a tiny webserver to host the files on localhost. 
+6. Download the result as SVG or PNG
 
-To run do `npm install` to restore packages and then `npm start` to start the webserver
+### CLI Tool
 
+The CLI tool allows batch processing of images from the command line.
 
-## Compiling the cli version
+**Basic Usage:**
+```bash
+node src-cli/main.js -i <input_image> -o <output_file> [-c <settings_json>]
+```
 
-Install pkg first if you don't have it yet `npm install pkg -g`. Then in the root folder run `pkg .`. This will generate the output for linux, windows and macos.
+**Example:**
+```bash
+node src-cli/main.js -i testinput.png -o output.svg -c src-cli/settings.json
+```
+
+**Parameters:**
+- `-i`: Input image path (required)
+- `-o`: Output file path (required)
+- `-c`: Settings JSON file path (optional, defaults to `settings.json`)
+
+**Settings File:**
+The CLI uses a JSON configuration file. See `src-cli/settings.json` for an example configuration with multiple output profiles.
+
+## Project Structure
+
+```
+-paintbynumber/
+├── src/                    # Main source code
+│   ├── main.ts            # Web application entry point
+│   ├── gui.ts             # GUI logic and event handlers
+│   ├── settings.ts        # Settings management
+│   ├── colorreductionmanagement.ts  # Color reduction algorithms
+│   ├── facetCreator.ts    # Facet detection
+│   ├── facetReducer.ts    # Facet reduction
+│   ├── facetBorderTracer.ts  # Border tracing
+│   ├── facetBorderSegmenter.ts  # Border segmentation
+│   ├── facetLabelPlacer.ts  # Label placement
+│   ├── lib/               # Core libraries
+│   ├── structs/           # Data structures
+│   └── utils/             # Utility functions
+├── src-cli/               # CLI tool source code
+│   ├── main.ts           # CLI entry point
+│   └── settings.json     # CLI settings example
+├── scripts/              # Compiled JavaScript (generated)
+├── styles/               # CSS stylesheets
+├── index.html            # Web application HTML
+└── package.json          # Project dependencies
+```
+
+## Development
+
+### Build
+
+Compile TypeScript to JavaScript:
+```bash
+npm run build
+```
+
+### Watch Mode
+
+Automatically rebuild on file changes:
+```bash
+npm run watch
+```
+
+### Scripts
+
+- `npm start` - Start the development server (lite-server on port 10001)
+- `npm run build` - Build the TypeScript project
+- `npm run watch` - Watch mode for development
+
+## Technical Details
+
+### Image Processing Pipeline
+
+1. **Image Loading**: Load and optionally resize input image
+2. **K-means Clustering**: Reduce colors using K-means algorithm in selected color space
+3. **Facet Creation**: Detect connected regions of the same color
+4. **Facet Reduction**: Remove small facets and limit total facet count
+5. **Border Tracing**: Trace borders of each facet
+6. **Border Segmentation**: Smooth borders by segmenting paths
+7. **Label Placement**: Determine optimal positions for color number labels
+8. **SVG Generation**: Generate final SVG output with labels and colors
+
+### Color Spaces
+
+- **RGB**: Standard red-green-blue color space
+- **HSL**: Hue-saturation-lightness color space (better for perceptual clustering)
+- **LAB**: CIELAB color space (most accurate perceptual clustering)
+
+## Browser Support
+
+- Modern browsers with ES6+ support
+- Canvas API support required
+- Drag and drop API support recommended
+
+## License
+
+See LICENSE file for details.
+
+## Author
+
+drake7707
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
